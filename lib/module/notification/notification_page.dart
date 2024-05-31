@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class NotificationPage extends StatelessWidget {
-  const NotificationPage({Key? key}) : super(key: key);
+  const NotificationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class NotificationPage extends StatelessWidget {
       ),
       body: ListView.builder(
         itemCount:
-            10, // You can replace this with the actual number of notifications
+        10, // You can replace this with the actual number of notifications
         itemBuilder: (context, index) {
           return NotificationCard(
             title: 'Title $index',
@@ -35,12 +35,12 @@ class NotificationCard extends StatelessWidget {
   final String time;
 
   const NotificationCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.description,
     required this.imageUrl,
     required this.time,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +97,4 @@ class NotificationCard extends StatelessWidget {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: NotificationPage(),
-  ));
 }

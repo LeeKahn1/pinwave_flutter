@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Profile'),
+          title: const Text('Profile'),
           backgroundColor: Colors.white,
           elevation: 0,
           actions: [
             IconButton(
-              icon: Icon(Icons.more_vert),
+              icon: const Icon(Icons.more_vert),
               color: Colors.black,
               onPressed: () {},
             ),
@@ -21,45 +23,45 @@ class ProfileScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 20),
-              CircleAvatar(
+              const SizedBox(height: 20),
+              const CircleAvatar(
                 radius: 50,
                 backgroundImage: AssetImage('assets/profile_picture.png'), // Add your image asset
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Arif Muhammad',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              Text('Arif Muhammad'),
-              Text('0 Pengikut · 0 Mengikuti'),
-              SizedBox(height: 20),
+              const Text('Arif Muhammad'),
+              const Text('0 Pengikut · 0 Mengikuti'),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {},
-                child: Text('Edit Profil'),
+                child: const Text('Edit Profil'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Container(
                 color: Colors.white,
                 child: Column(
                   children: [
-                    TabBar(
+                    const TabBar(
                       labelColor: Colors.black,
                       unselectedLabelColor: Colors.grey,
                       indicatorColor: Colors.black,
                       indicatorWeight: 3.0,
                       labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                      labelPadding: EdgeInsets.symmetric(horizontal: 10.0), 
+                      labelPadding: EdgeInsets.symmetric(horizontal: 10.0),
                       tabs: [
                         Tab(text: 'Dibuat'),
                         Tab(text: 'Disimpan'),
                       ],
                       indicatorSize: TabBarIndicatorSize.label,
-                      indicatorPadding: EdgeInsets.symmetric(horizontal: 10.0), 
+                      indicatorPadding: EdgeInsets.symmetric(horizontal: 10.0),
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.5,
-                      child: TabBarView(
+                      child: const TabBarView(
                         children: [
                           CreatedTab(),
                           SavedTab(),
@@ -78,11 +80,13 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class CreatedTab extends StatelessWidget {
+  const CreatedTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      padding: EdgeInsets.all(10),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      padding: const EdgeInsets.all(10),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
@@ -96,11 +100,13 @@ class CreatedTab extends StatelessWidget {
 }
 
 class SavedTab extends StatelessWidget {
+  const SavedTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      padding: EdgeInsets.all(10),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      padding: const EdgeInsets.all(10),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,

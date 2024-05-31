@@ -1,39 +1,22 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(PinterestBeranda());
-}
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
-class PinterestBeranda extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Beranda',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: Beranda(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class Beranda extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text('Beranda'),
+        title: const Text('HomePage'),
       ),
       body: GridView.count(
         crossAxisCount: 2,
         children: List.generate(
           10,
-          (index) {
+              (index) {
             return Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Container(
                 color: Colors.grey[200],
                 child: Column(
@@ -42,7 +25,7 @@ class Beranda extends StatelessWidget {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          image: DecorationImage(
+                          image: const DecorationImage(
                             image: AssetImage('assets/image_.jpg'),
                             fit: BoxFit.cover,
                           ),
@@ -51,10 +34,10 @@ class Beranda extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Text(
                         'gambar $index',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),

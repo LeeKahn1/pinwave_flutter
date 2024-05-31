@@ -1,26 +1,15 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SearchPage(),
-    );
-  }
-}
-
 class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+
   @override
-  _SearchPageState createState() => _SearchPageState();
+  State<SearchPage> createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _controller = TextEditingController();
-  List<SearchItem> _dummyResults = [
+  final List<SearchItem> _dummyResults = [
     SearchItem(title: 'Waifu', imageUrl: 'https://via.placeholder.com/150'),
     SearchItem(title: 'pp', imageUrl: 'https://via.placeholder.com/150'),
     SearchItem(title: 'Wallpaper', imageUrl: 'https://via.placeholder.com/150'),
@@ -35,7 +24,7 @@ class _SearchPageState extends State<SearchPage> {
         backgroundColor : Colors.blue,
         title: TextField(
           controller: _controller,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Search your Idea',
             icon: Icon(Icons.search),
             border: InputBorder.none,
@@ -50,7 +39,7 @@ class _SearchPageState extends State<SearchPage> {
       ),
       body: GridView.builder(
         padding: const EdgeInsets.all(10.0),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,

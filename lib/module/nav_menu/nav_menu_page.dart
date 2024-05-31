@@ -1,43 +1,23 @@
 import 'package:flutter/material.dart';
-import 'beranda.dart';
-import 'search.dart';
-import 'profile.dart';
-import 'createpin.dart';
-import 'notification.dart';
+import 'package:tubes_pinwave/module/create_pin/create_pin_page.dart';
+import 'package:tubes_pinwave/module/home/home_page.dart';
+import 'package:tubes_pinwave/module/notification/notification_page.dart';
+import 'package:tubes_pinwave/module/profile/profile_page.dart';
+import 'package:tubes_pinwave/module/search/search_page.dart';
 
-void main() {
-  runApp(const homepage());
-}
-
-class homepage extends StatelessWidget {
-  const homepage ({Key? key}) : super(key: key); 
-
-  @override 
-  Widget build(BuildContext context){
-    return MaterialApp(
-      title: 'PinWave',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'PinWave'),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget{
-  const MyHomePage({Key? key,  required this.title}) : super(key : key);
+class NavMenuPage extends StatefulWidget{
+  const NavMenuPage({super.key,  required this.title});
 
   final String title;
-  @override 
-  State<MyHomePage> createState() => _MyHomePageState();
+  @override
+  State<NavMenuPage> createState() => _NavMenuPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _NavMenuPageState extends State<NavMenuPage> {
   int selected = 0;
   PageController pc = PageController(initialPage: 0);
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Scaffold (
       backgroundColor: Colors.white,
@@ -50,11 +30,11 @@ class _MyHomePageState extends State<MyHomePage> {
             });
           },
           children: [
-            Beranda(), // Ganti dengan BerandaPage()
+            const HomePage(), // Ganti dengan BerandaPage()
             SearchPage(), // Ganti dengan SearchPage()
-            CreatePinPage(),
-            NotificationPage(),
-            ProfileScreen(),
+            const CreatePinPage(),
+            const NotificationPage(),
+            ProfilePage(),
           ],
         ),
       ),
@@ -70,26 +50,26 @@ class _MyHomePageState extends State<MyHomePage> {
           });
           pc.animateToPage(
             index,
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             curve: Curves.linear,
           );
         },
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_filled),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label : 'search'
+              icon: Icon(Icons.search),
+              label : 'search'
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle, size: 48),
-            label : ''
+              icon: Icon(Icons.add_circle, size: 48),
+              label : ''
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
-            label: 'notification', 
+            label: 'notification',
           ),
           BottomNavigationBarItem(
             icon: CircleAvatar(

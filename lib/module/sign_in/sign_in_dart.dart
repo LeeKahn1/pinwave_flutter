@@ -1,26 +1,15 @@
 import 'package:flutter/material.dart';
-import 'signup.dart';
-import 'homepage.dart';
-void main() {
-  runApp(LoginPage());
-}
+import 'package:tubes_pinwave/module/nav_menu/nav_menu_page.dart';
+import 'package:tubes_pinwave/module/sign_up/sign_up_page.dart';
 
-class LoginPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SignInScreen(),
-    );
-  }
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class SignInScreen extends StatefulWidget {
-  @override
-  _SignInScreenState createState() => _SignInScreenState();
-}
-
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
 
@@ -40,8 +29,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   Image.asset('assets/logo.jpeg', // Ganti dengan URL logo Anda
                     height: 100,
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'PINWAVE',
                     style: TextStyle(
                       fontSize: 32,
@@ -49,15 +38,15 @@ class _SignInScreenState extends State<SignInScreen> {
                       color: Colors.blue,
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Text(
+                  const SizedBox(height: 10),
+                  const Text(
                     'Sign in with your data that you have entered during your registration',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.grey),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   TextFormField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'UserName',
                       labelStyle: TextStyle(color: Colors.blue),
                       enabledBorder: UnderlineInputBorder(
@@ -65,13 +54,13 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextFormField(
                     obscureText: _obscureText,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle: TextStyle(color: Colors.blue),
-                      enabledBorder: UnderlineInputBorder(
+                      labelStyle: const TextStyle(color: Colors.blue),
+                      enabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey),
                       ),
                       suffixIcon: IconButton(
@@ -87,46 +76,46 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {},
-                      child: Text(
+                      child: const Text(
                         'Forgot password?',
                         style: TextStyle(color: Colors.blue),
                       ),
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => homepage()),
-                      );
+                      context,
+                      MaterialPageRoute(builder: (context) => const NavMenuPage(title: "title")),
+                    );
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                       shadowColor: Colors.blue.shade900, // Button color
                     ),
-                    child: Text('Sign In'),
+                    child: const Text('Sign In'),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Don't have an account?"),
+                      const Text("Don't have an account?"),
                       TextButton(
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => signup()),
+                            MaterialPageRoute(builder: (context) => SignUpPage()),
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           'Register',
                           style: TextStyle(color: Colors.blue),
                         ),

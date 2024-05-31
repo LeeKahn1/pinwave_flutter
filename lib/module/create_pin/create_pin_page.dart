@@ -1,29 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-
-void main() {
-  runApp(CreatePin());
-}
-
-class CreatePin extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Create Pin',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: CreatePinPage(),
-    );
-  }
-}
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreatePinPage extends StatefulWidget {
+  const CreatePinPage({super.key});
+
   @override
-  _CreatePinPageState createState() => _CreatePinPageState();
+  State<CreatePinPage> createState() => _CreatePinPageState();
+
 }
 
 class _CreatePinPageState extends State<CreatePinPage> {
@@ -44,15 +29,15 @@ class _CreatePinPageState extends State<CreatePinPage> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             // Handle back action
           },
         ),
-        title: Text('Create Pin', style: TextStyle(color: Colors.white)),
+        title: const Text('Create Pin', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             onPressed: () {
               // Handle settings action
             },
@@ -74,53 +59,53 @@ class _CreatePinPageState extends State<CreatePinPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: _imageFile == null
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.cloud_upload, size: 50, color: Colors.grey),
-                              SizedBox(height: 10),
-                              Center(
-                                child: Text('Choose a file or drag and drop it here')
-                              ),
-                              SizedBox(height: 10),
-                              Center(
-                                child: Text('We recommend using high quality .jpg files less than 20MB')
-                              ),
-                              Center(
-                                child: Text('or .mp4 files less than 200MB')
-                              ),
-                            ],
-                          ),
-                        )
+                      ? const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.cloud_upload, size: 50, color: Colors.grey),
+                        SizedBox(height: 10),
+                        Center(
+                            child: Text('Choose a file or drag and drop it here')
+                        ),
+                        SizedBox(height: 10),
+                        Center(
+                            child: Text('We recommend using high quality .jpg files less than 20MB')
+                        ),
+                        Center(
+                            child: Text('or .mp4 files less than 200MB')
+                        ),
+                      ],
+                    ),
+                  )
                       : Image.file(File(_imageFile!.path)),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Title',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 maxLines: 4,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Link',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               DropdownButtonFormField<String>(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Album',
                   border: OutlineInputBorder(),
                 ),
@@ -135,14 +120,14 @@ class _CreatePinPageState extends State<CreatePinPage> {
                   // Handle album selection
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Tags',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -150,15 +135,15 @@ class _CreatePinPageState extends State<CreatePinPage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Background color
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  backgroundColor: Colors.blue, // Background color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
-                child: 
-                Text('Publish', style: TextStyle(color: Colors.white)),
-                
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                ),
+                child:
+                const Text('Publish', style: TextStyle(color: Colors.white)),
+
               ),
             ],
           ),
