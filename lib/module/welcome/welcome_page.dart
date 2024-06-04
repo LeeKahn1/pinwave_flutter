@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_pinwave/module/sign_in/sign_in_dart.dart';
+import 'package:tubes_pinwave/module/sign_in/sign_in_page.dart';
 import 'package:tubes_pinwave/module/sign_up/sign_up_page.dart';
 
 class WelcomePage extends StatelessWidget {
