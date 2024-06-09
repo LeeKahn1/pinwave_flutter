@@ -39,11 +39,11 @@ class _NavMenuPageState extends State<NavMenuPage> {
                 selected = index;
               });
             },
-            children: [
-              const HomePage(), // Ganti dengan BerandaPage()
+            children: const [
+              HomePage(), // Ganti dengan BerandaPage()
               SearchPage(), // Ganti dengan SearchPage()
-              const CreatePinPage(),
-              const NotificationPage(),
+              CreatePinPage(),
+              NotificationPage(),
               ProfilePage(),
             ],
           ),
@@ -58,36 +58,64 @@ class _NavMenuPageState extends State<NavMenuPage> {
             setState(() {
               selected = index;
             });
-            pc.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.linear,
-            );
 
-            getUnread();
+            pc.jumpToPage(index);
+
+            if (index == 0 || index == 3) {
+              getUnread();
+            }
           },
-          items: const [
-            BottomNavigationBarItem(
+          items: [
+            const BottomNavigationBarItem(
               icon: Icon(Icons.home_filled),
               label: 'Home',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
                 icon: Icon(Icons.search),
                 label: 'search'
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
                 icon: Icon(Icons.add_circle, size: 48),
                 label: ''
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.notifications),
+              icon: Stack(
+                alignment: const Alignment(2, -2),
+                children: [
+                  const Icon(Icons.notifications),
+                  Visibility(
+                    visible: unread > 0,
+                    child: SizedBox.square(
+                      dimension: 17,
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        shape: const CircleBorder(),
+                        color: Colors.redAccent,
+                        elevation: 0,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                unread > 99 ? "99+" : unread.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
               label: 'notification',
             ),
-            BottomNavigationBarItem(
-              icon: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://via.placeholder.com/150'),
-              ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.person),
               label: "profile",
             )
           ],

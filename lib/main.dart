@@ -7,9 +7,21 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tubes_pinwave/api/custom_http_overrides.dart';
+import 'package:tubes_pinwave/constant.dart';
 import 'package:tubes_pinwave/helper/navigators.dart';
 import 'package:tubes_pinwave/helper/preferences.dart';
+import 'package:tubes_pinwave/module/album/album_bloc.dart';
+import 'package:tubes_pinwave/module/create_pin/create_pin_bloc.dart';
+import 'package:tubes_pinwave/module/edit_profile/edit_profile_bloc.dart';
+import 'package:tubes_pinwave/module/home/home_bloc.dart';
+import 'package:tubes_pinwave/module/nav_menu/nav_menu_bloc.dart';
+import 'package:tubes_pinwave/module/nav_menu/nav_menu_page.dart';
+import 'package:tubes_pinwave/module/notification/notification_bloc.dart';
+import 'package:tubes_pinwave/module/pin_detail/pin_detail_bloc.dart';
+import 'package:tubes_pinwave/module/profile/profile_bloc.dart';
+import 'package:tubes_pinwave/module/search/search_bloc.dart';
 import 'package:tubes_pinwave/module/sign_in/sign_in_bloc.dart';
+import 'package:tubes_pinwave/module/sign_up/sign_up_bloc.dart';
 import 'package:tubes_pinwave/module/welcome/welcome_page.dart';
 
 Future<void> main() async {
@@ -38,6 +50,16 @@ class PinWave extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (BuildContext context) => SignInBloc()),
+        BlocProvider(create: (BuildContext context) => SignUpBloc()),
+        BlocProvider(create: (BuildContext context) => SearchBloc()),
+        BlocProvider(create: (BuildContext context) => NotificationBloc()),
+        BlocProvider(create: (BuildContext context) => NavMenuBloc()),
+        BlocProvider(create: (BuildContext context) => HomeBloc()),
+        BlocProvider(create: (BuildContext context) => CreatePinBloc()),
+        BlocProvider(create: (BuildContext context) => ProfileBloc()),
+        BlocProvider(create: (BuildContext context) => AlbumBloc()),
+        BlocProvider(create: (BuildContext context) => PinDetailBloc()),
+        BlocProvider(create: (BuildContext context) => EditProfileBloc()),
       ],
       child: GlobalLoaderOverlay(
         useDefaultLoading: false,
@@ -73,11 +95,19 @@ class PinWave extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
               useMaterial3: true,
             ),
-            home: const WelcomePage(),
+            home: home(),
           ),
         ),
       ),
     );
+  }
+
+  Widget home() {
+    if (Preferences.getInstance().contain(SharedPreferenceKey.SESSION_ID)) {
+      return const NavMenuPage();
+    } else {
+      return const WelcomePage();
+    }
   }
 }
 

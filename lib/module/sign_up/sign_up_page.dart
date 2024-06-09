@@ -3,7 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:tubes_pinwave/api/endpoint/sign_up/sign_up_request.dart';
+import 'package:tubes_pinwave/constant.dart';
+import 'package:tubes_pinwave/helper/dialogs.dart';
 import 'package:tubes_pinwave/helper/navigators.dart';
+import 'package:tubes_pinwave/helper/preferences.dart';
 import 'package:tubes_pinwave/module/nav_menu/nav_menu_page.dart';
 import 'package:tubes_pinwave/module/sign_in/sign_in_page.dart';
 import 'package:tubes_pinwave/module/sign_up/sign_up_bloc.dart';
@@ -41,7 +44,18 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset('assets/logo.jpeg', height: 100),
+                  InkWell(
+                    onTap: () {
+                      Dialogs.tec(
+                        buildContext: context,
+                        title: "Awali dengan http:// dan akhiri dengan /api/",
+                        positiveCallback: (text) {
+                          Preferences.getInstance().setString(SharedPreferenceKey.BASE_URL, text.toLowerCase());
+                        },
+                      );
+                    },
+                    child: Image.asset('assets/logo.jpeg', height: 100)
+                  ),
                   // Update with your logo asset
                   const SizedBox(height: 20),
                   const Text(
@@ -102,11 +116,6 @@ class _SignUpPageState extends State<SignUpPage> {
                             passwordConfirmation: tecPassword.text
                           )
                         )
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (
-                            context) => const SignInPage()),
                       );
                     },
                     style: ElevatedButton.styleFrom(

@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tubes_pinwave/api/endpoint/home/home_pin_response.dart';
 import 'package:tubes_pinwave/api/endpoint/home/home_pin_response_pin.dart';
 import 'package:tubes_pinwave/helper/formats.dart';
+import 'package:tubes_pinwave/helper/navigators.dart';
 import 'package:tubes_pinwave/module/home/home_bloc.dart';
+import 'package:tubes_pinwave/module/pin_detail/pin_detail_page.dart';
 import 'package:tubes_pinwave/widgets/custom_shimmer.dart';
 import 'package:tubes_pinwave/widgets/no_data.dart';
 
@@ -47,6 +49,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
           title: const Text('HomePage'),
         ),
         body: body(),
@@ -60,45 +63,60 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (homePinResponse == null) {
-      return NoData();
+      return RefreshIndicator(
+        onRefresh: () async => refresh(),
+        child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: NoData()
+        ),
+      );
     }
 
     return RefreshIndicator(
       onRefresh: () async => refresh(),
       child: GridView.count(
           crossAxisCount: 2,
+          physics: AlwaysScrollableScrollPhysics(),
           children: List.generate(
             homePinResponse!.pins.length,
                 (index) {
               HomePinResponsePin item = homePinResponse!.pins[index];
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  color: Colors.grey[200],
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(item.imageUrl!),
-                              fit: BoxFit.cover,
+
+              String photos = item.imageUrl ?? "https://via.placeholder.com/150";
+
+              return InkWell(
+                onTap: () {
+                  Navigators.push(context, PinDetailPage(pinId: item.id));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    color: Colors.grey[200],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(photos),
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          Formats.coalesce(item.title),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            Formats.coalesce(item.title),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );

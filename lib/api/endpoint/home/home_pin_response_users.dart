@@ -1,7 +1,7 @@
 class HomePinResponseUsers {
   final String username;
   final String email;
-  final String imageUrl;
+  final String? imageUrl;
 
   HomePinResponseUsers({
     required this.username,

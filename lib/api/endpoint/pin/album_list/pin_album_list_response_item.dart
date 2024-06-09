@@ -1,10 +1,10 @@
 class PinAlbumListResponseItem {
   final int id;
   final String title;
-  final String description;
-  final String imageUrl;
-  final dynamic link;
-  final String tags;
+  final String? description;
+  final String? imageUrl;
+  final String? link;
+  final String? tags;
 
   PinAlbumListResponseItem({
     required this.id,

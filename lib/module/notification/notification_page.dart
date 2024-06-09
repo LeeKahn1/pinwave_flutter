@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:tubes_pinwave/api/endpoint/notification/list/notification_list_response.dart';
 import 'package:tubes_pinwave/api/endpoint/notification/list/notification_list_response_item.dart';
+import 'package:tubes_pinwave/helper/dialogs.dart';
 import 'package:tubes_pinwave/helper/formats.dart';
 import 'package:tubes_pinwave/helper/generals.dart';
+import 'package:tubes_pinwave/module/nav_menu/nav_menu_bloc.dart';
 import 'package:tubes_pinwave/module/notification/notification_bloc.dart';
 import 'package:tubes_pinwave/widgets/custom_shimmer.dart';
 import 'package:tubes_pinwave/widgets/no_data.dart';
@@ -34,6 +36,7 @@ class _NotificationPageState extends State<NotificationPage> {
         if (state is NotificationGetDataLoading) {
           setState(() {
             loading = true;
+            notificationListResponse = null;
           });
         } else if (state is NotificationGetDataSuccess) {
           setState(() {
@@ -49,10 +52,16 @@ class _NotificationPageState extends State<NotificationPage> {
           context.loaderOverlay.hide();
         } else if (state is NotificationRealAllSuccess) {
           refresh(false);
+
           Generals.showSnackBar(context, "Berhasil menandai semua telah dibaca");
+
+          context.read<NavMenuBloc>().add(NavMenuGetUnreadNotification());
         } else if (state is NotificationReadByIdSuccess) {
           refresh(false);
-          Generals.showSnackBar(context, "Berhasil menandai notifikasi terpilih");
+
+          Generals.showSnackBar(context, "Berhasil menandai notifikasi terpilih telah dibaca");
+
+          context.read<NavMenuBloc>().add(NavMenuGetUnreadNotification());
         }
       },
       child: Scaffold(
@@ -72,8 +81,14 @@ class _NotificationPageState extends State<NotificationPage> {
       return CustomShimmer();
     }
 
-    if (notificationListResponse == null) {
-      return NoData();
+    if (notificationListResponse!.notifications.isEmpty) {
+      return RefreshIndicator(
+        onRefresh: () async => refresh(true),
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: NoData()
+        )
+      );
     }
 
     return RefreshIndicator(
@@ -85,12 +100,18 @@ class _NotificationPageState extends State<NotificationPage> {
 
           return NotificationCard(
             title: item.message,
-            description: '',
-            imageUrl: 'https://via.placeholder.com/150',
+            imageUrl: 'assets/logo.jpeg',
             time: Formats.convertToAgo(item.createdAt),
+            markRead: item.readAt == null,
             onTap: () {
-              if (item.readAt != null) {
-                context.read<NotificationBloc>().add(NotificationReadById(notificationId: item.id));
+              if (item.readAt == null) {
+                Dialogs.confirmation(
+                  context: context,
+                  title: "Tandai telah dibaca?",
+                  positiveCallback: () {
+                    context.read<NotificationBloc>().add(NotificationReadById(notificationId: item.id));
+                  },
+                );
               }
             }, // Example time
           );
@@ -106,17 +127,17 @@ class _NotificationPageState extends State<NotificationPage> {
 
 class NotificationCard extends StatelessWidget {
   final String title;
-  final String description;
   final String imageUrl;
   final String time;
+  final bool markRead;
   final void Function() onTap;
 
   const NotificationCard({
     super.key,
     required this.title,
-    required this.description,
     required this.imageUrl,
     required this.time,
+    required this.markRead,
     required this.onTap,
   });
 
@@ -124,6 +145,7 @@ class NotificationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      color: markRead ? Colors.blue : Colors.white,
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -132,7 +154,7 @@ class NotificationCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
-                child: Image.network(
+                child: Image.asset(
                   imageUrl,
                   width: 50,
                   height: 50,
@@ -143,30 +165,22 @@ class NotificationCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
+                        color: markRead ? null : Colors.blue
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      description,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       time,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: Colors.grey,
+                        color: markRead ? Colors.white : Colors.grey,
                       ),
                     ),
                   ],

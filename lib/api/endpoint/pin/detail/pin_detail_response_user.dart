@@ -1,8 +1,8 @@
 class PinDetailResponseUser {
   final int id;
   final String username;
-  final String email;
-  final String imageUrl;
+  final String? email;
+  final String? imageUrl;
   final int followingCount;
   final bool followed;
 

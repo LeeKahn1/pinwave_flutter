@@ -1,10 +1,11 @@
 class AccountResponseUser {
   final String username;
   final String email;
-  final String imageUrl;
+  final String? imageUrl;
   final int pinsCount;
   final int likesCount;
   final int followersCount;
+  final int followingCount;
 
   AccountResponseUser({
     required this.username,
@@ -13,6 +14,7 @@ class AccountResponseUser {
     required this.pinsCount,
     required this.likesCount,
     required this.followersCount,
+    required this.followingCount,
   });
 
   factory AccountResponseUser.fromJson(Map<String, dynamic> json) => AccountResponseUser(
@@ -22,5 +24,6 @@ class AccountResponseUser {
     pinsCount: json["pinsCount"],
     likesCount: json["likesCount"],
     followersCount: json["followersCount"],
+    followingCount: json["followingCount"],
   );
 }

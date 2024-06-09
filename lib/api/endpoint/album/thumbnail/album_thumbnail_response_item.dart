@@ -1,7 +1,7 @@
 class AlbumThumbnailResponseItem {
   final int id;
   final String name;
-  final String thumbnail;
+  final String? thumbnail;
 
   AlbumThumbnailResponseItem({
     required this.id,

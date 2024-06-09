@@ -1,12 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:typed_data';
-
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:tubes_pinwave/helper/navigators.dart';
-import 'package:tubes_pinwave/widgets/camera_page.dart';
+import 'package:tubes_pinwave/helper/generals.dart';
 
 class Dialogs {
   static Future<void> message({
@@ -101,131 +96,188 @@ class Dialogs {
     );
   }
 
-  static Future<void> image({
-    required BuildContext context,
+  static Future<void> tec({
+    required BuildContext buildContext,
     required String title,
-    required bool multiple,
-    required bool allowGallery,
-    required void Function(List<Uint8List> files) callback,
-  }) async {
-    if (allowGallery) {
-      List<Widget> actions = [
-        TextButton(
-          child: const Text("Tutup"),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ];
+    String? message,
+    String? negative,
+    String? positive,
+    bool cancelable = true,
+    VoidCallback? negativeCallback,
+    required void Function(String text) positiveCallback
+  }) {
+    return showDialog(
+        context: buildContext,
+        builder: (context) {
+          final TextEditingController textEditingController = TextEditingController();
 
-      BoxDecoration boxDecoration = BoxDecoration(
-        border: Border.all(
-          color: Theme.of(context).colorScheme.primary,
-          width: 1.5,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      );
-
-      await showDialog(
-        context: context,
-        builder: (BuildContext buildContext) {
-          return AlertDialog(
-            title: const Text("Pilih Sumber Foto"),
-            content: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 100,
-                    decoration: boxDecoration,
-                    child: InkWell(
-                      onTap: () async {
-                        List<Uint8List> files = [];
-
-                        List<XFile> xFiles = await ImagePicker().pickMultiImage(
-                          imageQuality: 20,
-                        );
-
-                        for (XFile xFile in xFiles) {
-                          Uint8List bytesFile = Uint8List.fromList(await xFile.readAsBytes());
-
-                          files.add(
-                            bytesFile,
-                          );
-                        }
-
-                        Navigators.pop(context);
-
-                        callback.call(files);
-                      },
-                      child: const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [Icon(Icons.photo), Text("Galeri")],
-                        ),
-                      ),
+          return StatefulBuilder(
+              builder: (context, setState) {
+                return AlertDialog(
+                    title: Text(
+                        title,
+                        style: const TextStyle(
+                            fontSize: 18
+                        )
                     ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Container(
-                    height: 100,
-                    decoration: boxDecoration,
-                    child: InkWell(
-                      onTap: () async {
-                        List<Uint8List> byteList = [];
-
-                        await availableCameras().then((value) {
-                          Navigators.push(
-                            context,
-                            CameraPage(
-                              cameraDescriptions: value,
-                              callback: (bytes) async {
-                                byteList.add(
-                                  bytes,
-                                );
-
-                                Navigators.pop(context);
-
-                                callback.call(byteList);
-                              },
-                            ),
-                          );
-                        });
-                      },
-                      child: const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [Icon(Icons.camera_alt), Text("Kamera")],
-                        ),
-                      ),
+                    content: TextFormField(
+                        controller: textEditingController,
+                        decoration: InputDecoration(
+                            hintText: "Masukkan Text",
+                            helperText: message
+                        )
                     ),
-                  ),
-                ),
-              ],
-            ),
-            actions: actions,
+                    actions: [
+                      TextButton(
+                          child: Text(negative ?? "Tutup"),
+                          onPressed: () {
+                            Navigator.of(buildContext).pop();
+
+                            if (negativeCallback != null) {
+                              negativeCallback.call();
+                            }
+                          }
+                      ),
+                      TextButton(
+                          child: Text(positive ?? "Simpan"),
+                          onPressed: () {
+                            if(textEditingController.text.isNotEmpty) {
+                              Navigator.of(buildContext).pop();
+
+                              positiveCallback.call(textEditingController.text);
+                            } else {
+                              Generals.showSnackBar(context, "Isian tidak boleh kosong", backgroundColor: Colors.red);
+                            }
+                          }
+                      )
+                    ]
+                );
+              }
           );
-        },
-      );
-    } else {
-      List<Uint8List> byteList = [];
+        }
+    );
+  }
 
-      await availableCameras().then((value) {
-        Navigators.push(
-          context,
-          CameraPage(
-            cameraDescriptions: value,
-            callback: (bytes) async {
-              byteList.add(
-                bytes,
-              );
+  static Future<void> changePassword({
+    required BuildContext buildContext,
+    String? message,
+    String? negative,
+    String? positive,
+    bool cancelable = true,
+    VoidCallback? negativeCallback,
+    required void Function(String oldPassword, String newPassword, String conPassword) positiveCallback
+  }) {
+    return showDialog(
+        context: buildContext,
+        barrierDismissible: false,
+        builder: (context) {
+          final changePasswordState = GlobalKey<FormState>();
+          final TextEditingController tecOldPassword = TextEditingController();
+          final TextEditingController tecNewPassword = TextEditingController();
+          final TextEditingController tecConPassword = TextEditingController();
+          bool pass1 = true;
+          bool pass2 = true;
+          bool pass3 = true;
 
-              callback.call(byteList);
-            },
-          ),
-        );
-      });
-    }
+          return StatefulBuilder(
+              builder: (context, setState) {
+                return AlertDialog(
+                    title: const Text(
+                        "Ganti Password",
+                        style: TextStyle(
+                            fontSize: 18
+                        )
+                    ),
+                    content: Form(
+                      key: changePasswordState,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextFormField(
+                            controller: tecOldPassword,
+                            obscureText: pass1,
+                            decoration: InputDecoration(
+                                hintText: "Masukkan Password Lama",
+                                helperText: message,
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      pass1 = !pass1;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    pass1 ? Icons.visibility_off : Icons.visibility
+                                  )
+                                )
+                            )
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: tecNewPassword,
+                            obscureText: pass2,
+                            decoration: InputDecoration(
+                                hintText: "Masukkan Password Baru",
+                                helperText: message,
+                                suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        pass2 = !pass2;
+                                      });
+                                    },
+                                    icon: Icon(
+                                        pass2 ? Icons.visibility_off : Icons.visibility
+                                    )
+                                )
+                            )
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: tecConPassword,
+                            obscureText: pass3,
+                            decoration: InputDecoration(
+                                hintText: "Masukkan Konfirmasi Password Baru",
+                                helperText: message,
+                                suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        pass3 = !pass3;
+                                      });
+                                    },
+                                    icon: Icon(
+                                        pass3 ? Icons.visibility_off : Icons.visibility
+                                    )
+                                )
+                            )
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                          child: Text(negative ?? "Tutup"),
+                          onPressed: () {
+                            Navigator.of(buildContext).pop();
+
+                            if (negativeCallback != null) {
+                              negativeCallback.call();
+                            }
+                          }
+                      ),
+                      TextButton(
+                          child: Text(positive ?? "Simpan"),
+                          onPressed: () {
+                            if(tecOldPassword.text.isNotEmpty || tecNewPassword.text.isNotEmpty || tecConPassword.text.isNotEmpty) {
+                              positiveCallback.call(tecOldPassword.text, tecNewPassword.text, tecConPassword.text);
+                            } else {
+                              Generals.showSnackBar(context, "Isian tidak boleh kosong", backgroundColor: Colors.red);
+                            }
+                          }
+                      )
+                    ]
+                );
+              }
+          );
+        }
+    );
   }
 }

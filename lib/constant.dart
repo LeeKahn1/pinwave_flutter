@@ -5,7 +5,9 @@ class Parameter {
 }
 
 class ApiUrl {
-  static String MAIN_BASE = "http://10.0.2.2:8080/api/";
+  // Kalo pake Emulator bawaan Android Studio hostnya "http://10.0.2.2:8000/api/"
+  // Kalo pake Real Device, Hostnya ada di IPv4 dengan catatan PC dan Real Device menggunakan jaringan yang sama
+  static String MAIN_BASE = "http://10.0.2.2:8000/api/";
 
   static String USER = "user";
   static String SIGN_IN = "sign-in";
@@ -32,11 +34,11 @@ class ApiUrl {
   static String ALBUM = "albums";
   static String ALBUM_THUMBNAIL = "albums/pins";
   static String ALBUM_ADD = "albums/add";
-
-
+  static String PIN_DOWNLOAD = "pins/download/";
 }
 
 enum SharedPreferenceKey {
   SESSION_ID,
   USERNAME,
+  BASE_URL,
 }

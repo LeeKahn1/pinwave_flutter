@@ -1,10 +1,10 @@
 class AccountResponsePin {
   final int id;
   final String title;
-  final String description;
-  final String imageUrl;
-  final String link;
-  final String tag;
+  final String? description;
+  final String? imageUrl;
+  final String? link;
+  final String? tag;
   final bool likes;
 
   AccountResponsePin({

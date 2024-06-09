@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:tubes_pinwave/api/endpoint/sign_in/sign_in_request.dart';
+import 'package:tubes_pinwave/constant.dart';
+import 'package:tubes_pinwave/helper/dialogs.dart';
 import 'package:tubes_pinwave/helper/navigators.dart';
+import 'package:tubes_pinwave/helper/preferences.dart';
 import 'package:tubes_pinwave/module/nav_menu/nav_menu_page.dart';
 import 'package:tubes_pinwave/module/sign_in/sign_in_bloc.dart';
 import 'package:tubes_pinwave/module/sign_up/sign_up_page.dart';
@@ -16,8 +19,8 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController tecUsername = TextEditingController(text: "fauzi");
-  TextEditingController tecPassword = TextEditingController(text: "password123");
+  TextEditingController tecUsername = TextEditingController();
+  TextEditingController tecPassword = TextEditingController();
   bool _obscureText = true;
 
   @override
@@ -43,8 +46,19 @@ class _SignInPageState extends State<SignInPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/logo.jpeg', // Ganti dengan URL logo Anda
-                        height: 100,
+                      InkWell(
+                        onTap: () {
+                          Dialogs.tec(
+                            buildContext: context,
+                            title: "Awali dengan http:// dan akhiri dengan /api/",
+                            positiveCallback: (text) {
+                              Preferences.getInstance().setString(SharedPreferenceKey.BASE_URL, text.toLowerCase());
+                            },
+                          );
+                        },
+                        child: Image.asset('assets/logo.jpeg', // Ganti dengan URL logo Anda
+                          height: 100,
+                        ),
                       ),
                       const SizedBox(height: 20),
                       const Text(
@@ -96,16 +110,16 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Forgot password?',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
-                      ),
+                      // Align(
+                      //   alignment: Alignment.centerRight,
+                      //   child: TextButton(
+                      //     onPressed: () {},
+                      //     child: const Text(
+                      //       'Forgot password?',
+                      //       style: TextStyle(color: Colors.blue),
+                      //     ),
+                      //   ),
+                      // ),
                       const SizedBox(height: 30),
                       ElevatedButton(
                         onPressed: () {

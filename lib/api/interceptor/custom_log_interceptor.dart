@@ -5,6 +5,10 @@ import "package:flutter/material.dart";
 import "package:tubes_pinwave/constant.dart";
 
 class CustomLogInterceptor extends InterceptorsWrapper {
+  final bool printLogResponse;
+
+  CustomLogInterceptor({required this.printLogResponse});
+
   @override
   void onRequest(
     RequestOptions options,
@@ -37,11 +41,13 @@ class CustomLogInterceptor extends InterceptorsWrapper {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
-    if (Parameter.API_PRINT_LOGGING_ENABLED) {
-      debugPrint(
-        "[LogInterceptor] Response body: ${response.data}",
-        wrapWidth: 1024,
-      );
+    if (printLogResponse) {
+      if (Parameter.API_PRINT_LOGGING_ENABLED) {
+        debugPrint(
+          "[LogInterceptor] Response body: ${response.data}",
+          wrapWidth: 1024,
+        );
+      }
     }
 
     return handler.next(response);

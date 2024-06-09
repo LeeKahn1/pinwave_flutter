@@ -7,7 +7,9 @@ import "package:dio/dio.dart";
 import "package:dio/io.dart";
 import "package:tubes_pinwave/api/endpoint/album/name/album_name_request.dart";
 import "package:tubes_pinwave/api/endpoint/change_password/change_password_request.dart";
+import "package:tubes_pinwave/api/endpoint/edit_profile/edit_profile_request.dart";
 import "package:tubes_pinwave/api/endpoint/pin/comment/pin_comment_request.dart";
+import "package:tubes_pinwave/api/endpoint/pin/create/pin_create_request.dart";
 import "package:tubes_pinwave/api/endpoint/pin/pin_save_to_album_request.dart";
 import "package:tubes_pinwave/api/endpoint/pin/report/pin_report_request.dart";
 import "package:tubes_pinwave/api/endpoint/sign_in/sign_in_request.dart";
@@ -15,26 +17,28 @@ import "package:tubes_pinwave/api/endpoint/sign_up/sign_up_request.dart";
 import "package:tubes_pinwave/api/interceptor/authorization_interceptor.dart";
 import "package:tubes_pinwave/api/interceptor/custom_log_interceptor.dart";
 import "package:tubes_pinwave/constant.dart";
+import "package:tubes_pinwave/helper/preferences.dart";
 
 class ApiManager {
   static Future<Dio> getDio({
     bool manager = false,
     bool alternative = false,
+    bool printLogResponse = true,
   }) async {
-    String baseUrl = ApiUrl.MAIN_BASE;
+    String baseUrl = Preferences.getInstance().getString(SharedPreferenceKey.BASE_URL) ?? ApiUrl.MAIN_BASE;
 
     Dio dio = Dio(
       BaseOptions(
         baseUrl: baseUrl,
-        connectTimeout: const Duration(seconds: 60),
-        receiveTimeout: const Duration(seconds: 60),
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 15),
         contentType: Headers.jsonContentType,
       ),
     );
 
     dio.interceptors.add(AuthorizationInterceptor());
     dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
-    dio.interceptors.add(CustomLogInterceptor());
+    dio.interceptors.add(CustomLogInterceptor(printLogResponse: printLogResponse));
 
     (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
       HttpClient httpClient = HttpClient();
@@ -231,14 +235,23 @@ class ApiManager {
 
   // FORM DATA
   static Future<Response> postCreatePin({
-    required PinSaveToAlbumRequest pinSaveToAlbumRequest
+    required PinCreateRequest pinCreateRequest
   }) async {
     try {
+      FormData formData = FormData.fromMap({
+        "title": pinCreateRequest.title,
+        "description": pinCreateRequest.description,
+        "image": await MultipartFile.fromFile(pinCreateRequest.imagePath),
+        "link": pinCreateRequest.link,
+        "tags": pinCreateRequest.tags,
+        "albumId": pinCreateRequest.albumId,
+      });
+
       Dio dio = await getDio();
 
       Response response = await dio.post(
           ApiUrl.CREATE_PIN,
-          data: pinSaveToAlbumRequest
+          data: formData
       );
 
       return response;
@@ -427,12 +440,21 @@ class ApiManager {
   }
 
   // FORM DATA
-  static Future<Response> postChangeProfile() async {
+  static Future<Response> postChangeProfile({
+    required EditProfileRequest editProfileRequest
+  }) async {
     try {
+      FormData formData = FormData.fromMap({
+        "photo": editProfileRequest.imagePath != null ? await MultipartFile.fromFile(editProfileRequest.imagePath!) : null,
+        "username": editProfileRequest.username,
+        "email": editProfileRequest.email,
+      });
+
       Dio dio = await getDio();
 
       Response response = await dio.post(
         ApiUrl.CHANGE_PROFILE,
+        data: formData
       );
 
       return response;
@@ -491,7 +513,7 @@ class ApiManager {
   }
 
   static Future<Response> getPinAlbum({
-    required albumId
+    required int albumId
   }) async {
     try {
       Dio dio = await getDio();
@@ -575,5 +597,32 @@ class ApiManager {
     }
   }
 
+  static Future<Response> pinDownload({
+    required int pinId,
+  }) async {
+    try {
+      Dio dio = await getDio(printLogResponse: false);
 
+      Response response = await dio.post(
+        ApiUrl.PIN_DOWNLOAD,
+        data: {
+          "pinId": pinId
+        },
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+        ),
+      );
+
+      return response;
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.badResponse) {
+        rethrow;
+      }
+
+      print(e.toString());
+
+      rethrow;
+    }
+  }
 }

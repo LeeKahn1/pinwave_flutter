@@ -35,7 +35,7 @@ class AuthorizationInterceptor extends InterceptorsWrapper {
 
       return handler.next(err);
     } else {
-      Overlays.error(message: err.response?.data.toString() ?? "Ada yang salah!");
+      Overlays.error(message: err.response?.data.toString() ?? "Ada sesuatu yang salah.\nCobalah beberapa saat lagi!");
 
       return handler.next(err);
     }
